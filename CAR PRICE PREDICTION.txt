@@ -1,0 +1,336 @@
+CAR PRICE PREDICTION
+
+
+project 1 --> car price prediction ctrl+cied through siddhan and 41t1 s5t from kaggle.com we need to do this in google colab this car price prediction using the Ml with python. this is a regression Ml project ******** important ML project. so the problem statement is we have to find the car prices of the used cars so we have the car dataset and we have the dataset features are car brand (what is the brand of car) we have a year(what year its made manifz) we have sold feature ( sold feature means what is the particular sold price of the car) we have the present price (that means what is the present price that particular price) we have KMS driven ( that means how many km that car has driven) we have fuel type (that means either it was petrol or gas or disell) we have seller type (that means either 1st seller or 2nd seller or 3rd seller) we have transmission type (that means either it is automatic or manual) we have owners ( that means how many owners) work flow ---->  1 is data collection(car data) we need car data to feed this DATA TO ML MODEL.  2 we need to pre process the data, we cant give the raw data to ML MODEL to undstand the data to ML we need to do pre processing or data pre processing , once we process the data we need to spilt this data into training data and testing data, this 3 step is called train test split, once we have splitted the data we will train our ML ALGORITHM with training dataand we will test our evaluate ML model with this test data. and after this, we will feed this to our Regression Model, in this care we are using two Regression Model 1 is Linear Regression and 2 is Lasso  Regression,1st we will train our ML model with Linear Regression model and 2 will use Lasso and we will compare the accuracy score or error percentage of this model and see which model is good for this ml model, in the case of classification problem we will predictiverticular data type belongs to for ex we made project on diabetes , so in that case our ML model predictserson having diabetes , yes or no,  so yes or no is classification problems this is regression problem because we are predicting the particular value on which the car can be sold, this regression problems, and we will be using linear regression, and lasso and compare once we train our model with regression model with this training data, we will evaluate,and in the end we have trained linear & lasso regression model and we need to add new data to ml model, we can predict how much price car sold. 
+
+files -> car data.csv.load
+importing the Dependencies shift+enter to next cell   
+
+
+import pandas as pd (pandas used to make dataframe, dataframes are more structurles forms
+import matplotlib.pyplot as plt (this used to make plots)                                                                                          
+import seaborn as sns (to make plots)                                                                                                             
+from sklearn.model_selection import train_test_split( we need to split our orginal data into traiing data and test data this function is used to do that)            
+from sklearn.linear_model import LinearRegression (1 we train our data with LR, then we will train with Lasso Regression)                          
+from sklearn.linear_model import Lasso ( )                                                                                                         
+from sklearn import metrics (this metrics is used to evulate our model, to find the error score, accuracy etc)                                                                                [shift+enter]                                                                                                 
+data collection and processing  
+                                                                                                                   
+load csv.file to pandas dataframe
+
+
+   
+# loading the data from csv filr to pandas dataframe
+car_dataset = pd.read_csv('/here put copy path of dataset')
+run
+
+
+
+# inspecting the first 5 rows of the dataframe 
+car_dataset.head()
+run
+head function will print the first 5 rows of rows
+(car_name year) (selling_price) (present_price) (kms_driven) (fuel_type) (seller_type) (transmissiin) (owner)
+
+      Car_Name  Year S_Price    P_Price	Kms_en	Fuel_Typ S_Type	Temissn	Owner
+0	ritz	2014	3.35	5.59	27000	Petrol	Dealer	Manual	0
+1	sx4	2013	4.75	9.54	43000	Diesel	Dealer	Manual	0
+2	ciaz	2017	7.25	9.85	6900	Petrol	Dealer	Manual	0
+3	wagon r	2011	2.85	4.15	5200	Petrol	Dealer	Manual	0
+4	swift	2014	4.60	6.87	42450	Diesel	Dealer	Manual	0
+
+
+
+
+# checking the number of rows and columns
+car_dataset.shape
+run
+(301, 9) --->> 301 rows and 9--->>columns
+
+
+
+# getting some information about thid dataset
+car_dataset.info()  
+run
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 301 entries, 0 to 300
+Data columns (total 9 columns):
+ #   Column         Non-Null Count  Dtype  
+---  ------         --------------  -----  
+ 0   Car_Name       301 non-null    object 
+ 1   Year           301 non-null    int64  
+ 2   Selling_Price  301 non-null    float64
+ 3   Present_Price  301 non-null    float64
+ 4   Kms_Driven     301 non-null    int64  
+ 5   Fuel_Type      301 non-null    object 
+ 6   Seller_Type    301 non-null    object 
+ 7   Transmission   301 non-null    object 
+ 8   Owner          301 non-null    int64  
+dtypes: float64(2), int64(3), object(4)
+memory usage: 21.3+ KB
+                                                                                                                                                                                   
+
+# checking the number of missing values
+car_dataset.isnull().sum()
+run
+Car_Name         0
+Year             0
+Selling_Price    0
+Present_Price    0
+Kms_Driven       0
+Fuel_Type        0
+Seller_Type      0
+Transmission     0
+Owner            0
+dtype: int64
+               
+
+        
+
+# checking the distribution of categorical data
+print(car_dataset.Fuel_Type.value_counts())
+print(car_dataset.Seller_Type.value_counts())
+print(car_dataset.Transmission.value_counts())
+run
+Petrol    239
+Diesel     60
+CNG         2
+Name: Fuel_Type, dtype: int64
+Dealer        195
+Individual    106
+Name: Seller_Type, dtype: int64
+Manual       261
+Automatic     40
+Name: Transmission, dtype: int64
+
+
+
+Encoding the Categorical Data
+
+
+# encoding "Fuel_Type" Column
+car_dataset.replace({'Fuel_Type':{'Petrol':0,'Diesel':1,'CNG':2}},inplace=True)
+
+# encoding "Seller_Type" Column
+car_dataset.replace({'Seller_Type':{'Dealer':0,'Individual':1}},inplace=True)
+
+# encoding "Transmission" Column
+car_dataset.replace({'Transmission':{'Manual':0,'Automatic':1}},inplace=True)
+RUN
+
+
+
+
+
+car_dataset.head()
+run
+    Car_Name	Year	S_p	P_p	Km_D Fuel_Type S_T   TrMIS   Owner
+0	ritz	2014	3.35	5.59	27000	0	0	0	0
+1	sx4	2013	4.75	9.54	43000	1	0	0	0
+2	ciaz	2017	7.25	9.85	6900	0	0	0	0
+3	wagon r	2011	2.85	4.15	5200	0	0	0	0
+4	swift	2014	4.60	6.87	42450	1	0	0	0
+
+
+Splitting the data and Target
+
+
+X = car_dataset.drop(['Car_Name','Selling_Price'],axis=1)
+Y = car_dataset['Selling_Price']
+RUN
+
+print(X)
+
+RUN
+
+     Year  Present_Price  Kms_Driven  ...  Seller_Type  Transmission  Owner
+0    2014           5.59       27000  ...            0             0      0
+1    2013           9.54       43000  ...            0             0      0
+2    2017           9.85        6900  ...            0             0      0
+3    2011           4.15        5200  ...            0             0      0
+4    2014           6.87       42450  ...            0             0      0
+..    ...            ...         ...  ...          ...           ...    ...
+296  2016          11.60       33988  ...            0             0      0
+297  2015           5.90       60000  ...            0             0      0
+298  2009          11.00       87934  ...            0             0      0
+299  2017          12.50        9000  ...            0             0      0
+300  2016           5.90        5464  ...            0             0      0
+
+[301 rows x 7 columns]
+
+
+print(Y)
+
+RUN
+
+
+0       3.35
+1       4.75
+2       7.25
+3       2.85
+4       4.60
+       ...  
+296     9.50
+297     4.00
+298     3.35
+299    11.50
+300     5.30
+Name: Selling_Price, Length: 301, dtype: float64
+
+
+Splitting Training and Test data
+
+
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.1, random_state=2)
+RUN
+
+Model Training
+
+Linear Regression
+
+
+
+# loading the linear regression model
+lin_reg_model = LinearRegression()
+
+
+lin_reg_model.fit(X_train,Y_train)
+RUN
+LinearRegression(copy_X=True, fit_intercept=True, n_jobs=None, normalize=False)
+
+
+
+Model Evaluation
+
+
+
+# prediction on Training data
+training_data_prediction = lin_reg_model.predict(X_train)
+RUN
+
+
+
+# R squared Error
+error_score = metrics.r2_score(Y_train, training_data_prediction)
+print("R squared Error : ", error_score)
+RUN
+R squared Error :  0.8799451660493711
+
+
+Visualize the actual prices and Predicted prices
+
+
+
+plt.scatter(Y_train, training_data_prediction)
+plt.xlabel("Actual Price")
+plt.ylabel("Predicted Price")
+plt.title(" Actual Prices vs Predicted Prices")
+plt.show()
+RUN
+GRAPH 1
+
+
+# prediction on Training data
+test_data_prediction = lin_reg_model.predict(X_test)
+RUN
+
+# R squared Error
+error_score = metrics.r2_score(Y_test, test_data_prediction)
+print("R squared Error : ", error_score)
+RUN
+R squared Error :  0.8365766715027051
+
+
+
+plt.scatter(Y_test, test_data_prediction)
+plt.xlabel("Actual Price")
+plt.ylabel("Predicted Price")
+plt.title(" Actual Prices vs Predicted Prices")
+plt.show()
+RUN
+GRAPH2
+
+
+Lasso Regression
+
+
+
+# loading the linear regression model
+lass_reg_model = Lasso()
+RUN
+
+
+
+lass_reg_model.fit(X_train,Y_train)
+RUN
+Lasso(alpha=1.0, copy_X=True, fit_intercept=True, max_iter=1000,
+      normalize=False, positive=False, precompute=False, random_state=None,
+      selection='cyclic', tol=0.0001, warm_start=False)
+
+
+
+
+
+Model Evaluation
+
+
+# prediction on Training data
+training_data_prediction = lass_reg_model.predict(X_train)
+RUN
+
+# R squared Error
+error_score = metrics.r2_score(Y_train, training_data_prediction)
+print("R squared Error : ", error_score)
+RUN
+
+R squared Error :  0.8427856123435794
+
+
+Visualize the actual prices and Predicted prices
+
+
+
+
+plt.scatter(Y_train, training_data_prediction)
+plt.xlabel("Actual Price")
+plt.ylabel("Predicted Price")
+plt.title(" Actual Prices vs Predicted Prices")
+plt.show()
+RUN
+GRAPH3
+
+
+# prediction on Training data
+test_data_prediction = lass_reg_model.predict(X_test)
+RUN
+
+
+# R squared Error
+error_score = metrics.r2_score(Y_test, test_data_prediction)
+print("R squared Error : ", error_score)
+RUN
+
+R squared Error :  0.8709167941173195
+
+
+
+plt.scatter(Y_test, test_data_prediction)
+plt.xlabel("Actual Price")
+plt.ylabel("Predicted Price")
+plt.title(" Actual Prices vs Predicted Prices")
+plt.show()
+RUN
+GRAPH4
+
+
+
+
+
+
+
+
+
+
+
+
+
