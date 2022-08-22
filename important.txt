@@ -1,0 +1,27 @@
+basic python pandas numpy,,,,,pandas functions
+matplolib
+basic SQL ststics
+python list+ tupil+ set disc operaction
+python if, and for and while
+python lambda function
+local varibel globle variable
+
+print stars pyrimad trangle revers tetrangle
+
+n factrionals number in python
+swaping in python of 2number a = 5 b =6 
+list tiple operation, reverse insert drop create 12 to 13
+
+udemy
+
+intenshala for interships
+
+
+
+
+
+
+
+
+
+ 
